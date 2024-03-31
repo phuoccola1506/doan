@@ -1,0 +1,6 @@
+Ma sinh vien: PXU01
+Ho ten sinh vien: Nguyen Huu Phuoc
+Gioi tinh: Nam
+Tuoi: 18
+Diem qua trinh: 8.0
+Diem thi: 8.0
