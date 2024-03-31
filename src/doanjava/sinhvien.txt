@@ -1,0 +1,5 @@
+PXU01, Nguyen Van A, Nam, 18, 8.0, 7.5
+PXU02, Tran Thi B, Nu, 18, 7.0, 5.0
+PXU03, Nguyen Tran C, Nam, 19, 9.0, 9.5
+PXU04, Le Van D, Nam, 18, 5.0, 6.0
+PXU05, Nguyen Thi E, Nu, 19, 7.5, 9.0
