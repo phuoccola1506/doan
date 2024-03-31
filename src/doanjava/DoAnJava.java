@@ -7,21 +7,20 @@ package doanjava;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class DoAnJava {
-    
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         SinhVien[] danhSachSinhVien = null;
+        int a;
         int length;
         int[] thongKe = new int[4];
         boolean bool = true;
-        
+
         do {
             menuGiaoVien();
             int choice = sc.nextInt();
@@ -31,43 +30,46 @@ public class DoAnJava {
                     break;
                 }
                 case 2: {
-                    for (int i = 0; i < danhSachSinhVien.length; i++) {
-                        xemTTSV(danhSachSinhVien, i);
-                    }
+                    xemDSSV(danhSachSinhVien);
                     break;
                 }
                 case 3: {
                     danhSachSinhVien = themMotSinhVien(danhSachSinhVien, sc);
-                    xemTTSV(danhSachSinhVien, danhSachSinhVien.length - 1);
+                    xemDSSV(danhSachSinhVien);
                     break;
                 }
                 case 4: {
-                    timKiemSinhVien(danhSachSinhVien, sc);
+                    a = timKiemSinhVien(danhSachSinhVien, sc);
+                    suaDiemSinhVien(danhSachSinhVien, sc, a);
                     break;
                 }
                 case 5: {
-                    sapXepDSSV(danhSachSinhVien, sc);
-                    for (int i = 0; i < danhSachSinhVien.length; i++) {
-                        xemTTSV(danhSachSinhVien, i);
-                    }
+                    a = timKiemSinhVien(danhSachSinhVien, sc);
+                    danhSachSinhVien = xoaMotSinhVien(danhSachSinhVien, sc, a);
                     break;
                 }
                 case 6: {
+                    sapXepDSSV(danhSachSinhVien, sc);
+                    xemDSSV(danhSachSinhVien);
+                    break;
+                }
+                case 7: {
                     thongKe = thongKe(danhSachSinhVien, sc);
                     thongKeDSSV(thongKe, sc);
                     break;
                 }
-                case 7: {
+                case 8: {
                     xuatThongTinRaFile(danhSachSinhVien);
                     break;
                 }
-                case 8: {
-                    nhapThongTinTuFile();
-                    for (int i = 0; i < danhSachSinhVien.length; i++) {
-                        xemTTSV(danhSachSinhVien, i);
+                case 9: {
+                    danhSachSinhVien = nhapThongTinTuFile();
+                    if (danhSachSinhVien != null) {
+                        xemDSSV(danhSachSinhVien);
                     }
                     break;
                 }
+
                 case 0: {
                     System.out.println("Da thoat chuong trinh thanh cong.");
                     bool = false;
@@ -78,44 +80,26 @@ public class DoAnJava {
                     break;
                 }
             }
-            
+
         } while (bool == true);
     }
-    
-//    public static void menuMain() {
-//        System.out.println("QUAN LI DIEM SINH VIEN");
-//        System.out.println("Ban hien la: ");
-//        System.out.println("1. Giao vien");
-//        System.out.println("2. Sinh vien");
-//        System.out.println("0. Thoat chuong trinh");
-//        System.out.print("Moi ban chon: ");
-//    }
-    
+
     public static void menuGiaoVien() {
         System.out.println("QUAN LI DIEM SINH VIEN");
         System.out.println("Doi tuong: Giao vien");
         System.out.println("1. Nhap thong tin sinh vien");
         System.out.println("2. Xem danh sach sinh vien");
         System.out.println("3. Them mot sinh vien moi");
-        System.out.println("4. Tim kiem mot sinh vien");
-        System.out.println("5. Sap xep danh sach sinh vien");
-        System.out.println("6. Thong ke danh sach sinh vien");
-        System.out.println("7. Xuat thong tin ra file");
-        System.out.println("8. Nhap thong tin tu file");
+        System.out.println("4. Sua diem mot sinh vien");
+        System.out.println("5. Xoa mot sinh vien");
+        System.out.println("6. Sap xep danh sach sinh vien");
+        System.out.println("7. Thong ke danh sach sinh vien");
+        System.out.println("8. Xuat thong tin ra file");
+        System.out.println("9. Nhap thong tin tu file");
         System.out.println("0. Thoat chuong trinh");
         System.out.print("Hay chon chuc nang: ");
     }
-    
-//    public static void menuSinhVien() {
-//        System.out.println("QUAN LI DIEM SINH VIEN");
-//        System.out.println("Doi tuong: Sinh vien");
-//        System.out.println("1. Xem danh sach sinh vien");
-//        System.out.println("2. Tim kiem mot sinh vien");
-//        System.out.println("3. Sap xep danh sach sinh vien");
-//        System.out.println("4. Thong ke danh sach sinh vien");
-//        System.out.print("Hay chon chuc nang: ");
-//    }
-    
+
     public static SinhVien[] nhapDSSV(Scanner sc) {
         System.out.println("Nhap so luong sinh vien: ");
         int n = sc.nextInt();
@@ -142,32 +126,65 @@ public class DoAnJava {
             System.out.print("Diem thi: ");
             double diemThi = sc.nextDouble();
 
-            sc.nextLine(); // Đọc bỏ ký tự xuống dòng sau khi nhập điểm thi
+            if (diemQuaTrinh < 0 || diemThi < 0) {
+                System.out.println("Diem qua trinh va diem thi khong the nho hon 0");
+                System.out.println("Nhap lai diem qua trinh va diem thi");
+                System.out.print("Diem qua trinh: ");
+                diemQuaTrinh = sc.nextDouble();
+
+                System.out.print("Diem thi: ");
+                diemThi = sc.nextDouble();
+            }
+            sc.nextLine();
 
             danhSachSinhVien[i] = new SinhVien(maSV, hoTen, gioiTinh, tuoi, diemQuaTrinh, diemThi);
         }
-        
+
         return danhSachSinhVien;
     }
-    
-    public static void xemTTSV(SinhVien[] danhSachSinhVien, int i) {
-        System.out.println();
-        System.out.println("Thông tin sinh viên thứ " + (i + 1) + ":");
-        System.out.println("Mã sinh viên: " + danhSachSinhVien[i].maSV);
-        System.out.println("Họ tên: " + danhSachSinhVien[i].hoTen);
-        System.out.println("Giới tính: " + danhSachSinhVien[i].gioiTinh);
-        System.out.println("Tuổi: " + danhSachSinhVien[i].tuoi);
-        System.out.printf("Điểm quá trình: %.1f\n", danhSachSinhVien[i].diemQuaTrinh);
-        System.out.printf("Điểm thi: %.1f\n", danhSachSinhVien[i].diemThi);
-        System.out.printf("Điểm trung bình: %.1f\n", danhSachSinhVien[i].diemTrungBinh);
-        System.out.println("Xep loai: " + danhSachSinhVien[i].xepLoai);
-        System.out.println();
+
+    public static void xemDSSV(SinhVien[] danhSachSinhVien) {
+        System.out.println("+========================================================================================+");
+        System.out.println("|                                   DANH SACH SINH VIEN                                  |");
+        System.out.println("+========================================================================================+");
+        System.out.printf("|%7s|%25s|%5s|%4s|%10s|%10s|%10s|%10s|\n",
+                "MaSV", "Ho va ten", "GT", "Tuoi", "DiemQT", "DiemThi", "DiemTB", "XepLoai");
+        for (int i = 0; i < danhSachSinhVien.length; i++) {
+            System.out.printf("|%7s|%25s|%5s|%4d|%10.1f|%10.1f|%10.1f|%10s|\n",
+                    danhSachSinhVien[i].maSV,
+                    danhSachSinhVien[i].hoTen,
+                    danhSachSinhVien[i].gioiTinh,
+                    danhSachSinhVien[i].tuoi,
+                    danhSachSinhVien[i].diemQuaTrinh,
+                    danhSachSinhVien[i].diemThi,
+                    danhSachSinhVien[i].diemTrungBinh,
+                    danhSachSinhVien[i].xepLoai);
+        }
+        System.out.println("+========================================================================================+");
     }
-    
+
+    public static void xemTTSV(SinhVien[] danhSachSinhVien, int i) {
+        System.out.println("+========================================================================================+");
+        System.out.println("|                                   BANG DIEM SINH VIEN                                  |");
+        System.out.println("+========================================================================================+");
+        System.out.printf("|%7s|%25s|%5s|%4s|%10s|%10s|%10s|%10s|\n",
+                "MaSV", "Ho va ten", "GT", "Tuoi", "DiemQT", "DiemThi", "DiemTB", "XepLoai");
+        System.out.printf("|%7s|%25s|%5s|%4d|%10.1f|%10.1f|%10.1f|%10s|\n",
+                danhSachSinhVien[i].maSV,
+                danhSachSinhVien[i].hoTen,
+                danhSachSinhVien[i].gioiTinh,
+                danhSachSinhVien[i].tuoi,
+                danhSachSinhVien[i].diemQuaTrinh,
+                danhSachSinhVien[i].diemThi,
+                danhSachSinhVien[i].diemTrungBinh,
+                danhSachSinhVien[i].xepLoai);
+        System.out.println("+========================================================================================+");
+    }
+
     public static SinhVien[] themMotSinhVien(SinhVien[] danhSachSinhVien, Scanner sc) {
         System.out.println("Them mot sinh vien moi");
         sc.nextLine();
-        
+
         System.out.println("Nhap thong tin cho sinh vien thu " + (danhSachSinhVien.length + 1) + ":");
 
         System.out.print("Ma sinh vien: ");
@@ -188,62 +205,94 @@ public class DoAnJava {
         System.out.print("Diem thi: ");
         double diemThi = sc.nextDouble();
 
+        if (diemQuaTrinh < 0 || diemThi < 0) {
+            System.out.println("Diem qua trinh va diem thi khong the nho hon 0");
+            System.out.println("Nhap lai diem qua trinh va diem thi");
+            System.out.print("Diem qua trinh: ");
+            diemQuaTrinh = sc.nextDouble();
+
+            System.out.print("Diem thi: ");
+            diemThi = sc.nextDouble();
+        }
         sc.nextLine(); // Đọc bỏ ký tự xuống dòng sau khi nhập điểm thi
 
         SinhVien newSinhVien = new SinhVien(maSV, hoTen, gioiTinh, tuoi, diemQuaTrinh, diemThi);
-        
+
         //Tang kich thuoc mang
         SinhVien[] newDanhSachSinhVien = new SinhVien[danhSachSinhVien.length + 1];
-        for (int i =0; i < danhSachSinhVien.length; i++) {
+        for (int i = 0; i < danhSachSinhVien.length; i++) {
             newDanhSachSinhVien[i] = danhSachSinhVien[i];
         }
         newDanhSachSinhVien[danhSachSinhVien.length] = newSinhVien;
-        
+
         System.out.println("Them mot sinh vien moi thanh cong!");
-        
+
         return newDanhSachSinhVien;
     }
-    
-    public static void timKiemSinhVien(SinhVien[] danhSachSinhVien, Scanner sc) {
+
+    public static int timKiemSinhVien(SinhVien[] danhSachSinhVien, Scanner sc) {
+        sc.nextLine();
         System.out.println("Nhap ma sinh vien can tim: ");
         String maSVCanTim = sc.nextLine();
-        sc.nextLine();
-        
+
+        int daTimThay = 0;
         boolean timKiem = false;
-        String maSVKiemTra = "";
-        for (int i = 0; i < danhSachSinhVien.length; i++) {
-            maSVKiemTra = danhSachSinhVien[i].hoTen;
+        for (int i = 0; i < (danhSachSinhVien.length); i++) {
+            String maSVKiemTra = danhSachSinhVien[i].maSV;
             if (maSVKiemTra.equalsIgnoreCase(maSVCanTim)) {
-                xemTTSV(danhSachSinhVien, i);
+                daTimThay = i;
+                xemTTSV(danhSachSinhVien, daTimThay);
                 timKiem = true;
             }
         }
-        
+
         if (!timKiem) {
             System.out.println("Khong tim thay sinh vien co ma \"" + maSVCanTim + "\".");
         }
+
+        return daTimThay;
     }
-    
+
+    public static void suaDiemSinhVien(SinhVien[] danhSachSinhVien, Scanner sc, int a) {
+        System.out.println("Nhap diem qua trinh moi");
+        danhSachSinhVien[a].diemQuaTrinh = sc.nextFloat();
+        System.out.println("Nhap diem thi moi");
+        danhSachSinhVien[a].diemThi = sc.nextFloat();
+        System.out.println("Sua diem cho sinh vien thanh cong.");
+    }
+
+    public static SinhVien[] xoaMotSinhVien(SinhVien[] danhSachSinhVien, Scanner sc, int a) {
+        SinhVien[] newDanhSachSinhVien = new SinhVien[danhSachSinhVien.length - 1];
+        for (int i = a; i < danhSachSinhVien.length - 1; i++) {
+            danhSachSinhVien[i] = danhSachSinhVien[i + 1];
+        }
+        for (int i = 0; i < newDanhSachSinhVien.length; i++) {
+            newDanhSachSinhVien[i] = danhSachSinhVien[i];
+        }
+
+        return newDanhSachSinhVien;
+    }
+
     public static void sapXepDSSV(SinhVien[] danhSachSinhVien, Scanner sc) {
         SinhVien temp = null;
-        
+
         for (int i = 0; i < danhSachSinhVien.length - 1; i++) {
             for (int j = 0; j < danhSachSinhVien.length - i - 1; j++) {
-                if (danhSachSinhVien[j].diemTrungBinh < danhSachSinhVien[j+1].diemTrungBinh) {
+                if (danhSachSinhVien[j].diemTrungBinh < danhSachSinhVien[j + 1].diemTrungBinh) {
                     temp = danhSachSinhVien[j];
-                    danhSachSinhVien[j] = danhSachSinhVien[j+1];
-                    danhSachSinhVien[j+1] = temp;
+                    danhSachSinhVien[j] = danhSachSinhVien[j + 1];
+                    danhSachSinhVien[j + 1] = temp;
                 }
             }
         }
     }
-    
+
     public static void thongKeDSSV(int[] thongKe, Scanner sc) {
         System.out.println("Thong ke danh sach sinh vien");
         System.out.println("1. Theo xep loai");
         System.out.println("2. Theo diem trung binh");
         System.out.println("Hay chon chuc nang");
-        
+
         int choiceTK = sc.nextInt();
         if (choiceTK == 1) {
             System.out.println("Thong ke DSSV theo xep loai");
@@ -260,7 +309,7 @@ public class DoAnJava {
             System.out.println("So luong sinh vien DTB < 5: " + thongKe[3]);
         }
     }
-    
+
     public static int[] thongKe(SinhVien[] danhSachSinhVien, Scanner sc) {
         int soSVGioi = 0;
         int soSVKha = 0;
@@ -270,39 +319,33 @@ public class DoAnJava {
         for (int i = 0; i < danhSachSinhVien.length; i++) {
             if (danhSachSinhVien[i].diemTrungBinh >= 8) {
                 soSVGioi++;
-            }
-            else if (danhSachSinhVien[i].diemTrungBinh >= 6.5) {
+            } else if (danhSachSinhVien[i].diemTrungBinh >= 6.5) {
                 soSVKha++;
-            }
-            else if (danhSachSinhVien[i].diemTrungBinh >= 5) {
+            } else if (danhSachSinhVien[i].diemTrungBinh >= 5) {
                 soSVTB++;
-            }
-            else {
+            } else {
                 soSVYeu++;
             }
         }
-        
+
         thongKe[0] = soSVGioi;
         thongKe[1] = soSVKha;
         thongKe[2] = soSVTB;
         thongKe[3] = soSVYeu;
         return thongKe;
     }
-    
+
     public static void xuatThongTinRaFile(SinhVien[] danhSachSinhVien) {
         try {
             FileWriter writer = new FileWriter("sinhvien.txt");
             for (SinhVien sv : danhSachSinhVien) {
-//                String line = String.format("%s, %s, %S, %d, %.1f, %.1f\n", sv.maSV, sv.hoTen, sv.gioiTinh, sv.tuoi, 
-//                        sv.diemQuaTrinh, sv.diemThi);
-//                writer.write(line);
                 writer.write("Ma sinh vien: " + sv.maSV + "\n");
                 writer.write("Ho ten sinh vien: " + sv.hoTen + "\n");
                 writer.write("Gioi tinh: " + sv.gioiTinh + "\n");
                 writer.write("Tuoi: " + sv.tuoi + "\n");
                 writer.write("Diem qua trinh: " + sv.diemQuaTrinh + "\n");
                 writer.write("Diem thi: " + sv.diemThi + "\n");
-                
+
             }
             writer.close();
             System.out.println("Xuat thong tin danh sach sinh vien ra file thanh cong.");
@@ -311,32 +354,49 @@ public class DoAnJava {
             e.printStackTrace();
         }
     }
-    
-    public static void nhapThongTinTuFile() {
+
+    public static SinhVien[] nhapThongTinTuFile() {
         ArrayList<SinhVien> danhSachSinhVien = new ArrayList<>();
         String tenFile = "sinhvien.txt";
-        
+
         try {
             File file = new File(tenFile);
             Scanner scanner = new Scanner(file);
-            
+
             while (scanner.hasNextLine()) {
-                String maSV = scanner.nextLine().replace("Ma sinh vien: ", "");
-                String hoTen = scanner.nextLine().replace("Ho ten sinh vien: ", "");
-                String gioiTinh = scanner.nextLine().replace("Gioi tinh: ", "");
-                int tuoi = Integer.parseInt(scanner.nextLine().replace("Tuoi: ", ""));
-                double diemQuaTrinh = Double.parseDouble(scanner.nextLine().replace("Diem qua trinh: ", ""));
-                double diemThi = Double.parseDouble(scanner.nextLine().replace("Diem thi: ", ""));
-                scanner.nextLine();
-                
-                SinhVien sv = new SinhVien(maSV, hoTen, gioiTinh, tuoi, diemQuaTrinh, diemThi);
-                danhSachSinhVien.add(sv);
+                String line = scanner.nextLine();
+                String[] parts = line.split(": ");
+
+                if (parts.length >= 2) {
+                    String key = parts[0].trim();
+                    String value = parts[1].trim();
+
+                    switch (key) {
+                        case "Ma sinh vien":
+                            String maSV = value;
+                            String hoTen = scanner.nextLine().split(": ")[1].trim();
+                            String gioiTinh = scanner.nextLine().split(": ")[1].trim();
+                            int tuoi = Integer.parseInt(scanner.nextLine().split(": ")[1].trim());
+                            double diemQuaTrinh = Double.parseDouble(scanner.nextLine().split(": ")[1].trim());
+                            double diemThi = Double.parseDouble(scanner.nextLine().split(": ")[1].trim());
+
+                            SinhVien sv = new SinhVien(maSV, hoTen, gioiTinh, tuoi, diemQuaTrinh, diemThi);
+                            danhSachSinhVien.add(sv);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    System.out.println("Dòng không đúng định dạng: " + line);
+                }
             }
             scanner.close();
-            System.out.println("Nhap thong tin danh sach sinh vien tu file thanh cong.");
+            System.out.println("Nhập thông tin danh sách sinh viên từ file thành công.");
         } catch (FileNotFoundException e) {
             System.out.println("Không tìm thấy file: " + tenFile);
             e.printStackTrace();
         }
+
+        return danhSachSinhVien.toArray(new SinhVien[0]);
     }
 }
