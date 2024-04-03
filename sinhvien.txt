@@ -4,3 +4,39 @@ Gioi tinh: Nam
 Tuoi: 18
 Diem qua trinh: 8.0
 Diem thi: 8.0
+Ma sinh vien: PXU02
+Ho ten sinh vien: Le Quang Vinh
+Gioi tinh: Nam
+Tuoi: 19
+Diem qua trinh: 9.0
+Diem thi: 7.0
+Ma sinh vien: PXU03
+Ho ten sinh vien: Nguyen Thi A
+Gioi tinh: Nu
+Tuoi: 18
+Diem qua trinh: 6.0
+Diem thi: 8.0
+Ma sinh vien: PXU05
+Ho ten sinh vien: Le Huu C
+Gioi tinh: Nam
+Tuoi: 19
+Diem qua trinh: 7.0
+Diem thi: 4.5
+Ma sinh vien: PXU04
+Ho ten sinh vien: Tran Van B
+Gioi tinh: Nam
+Tuoi: 18
+Diem qua trinh: 5.0
+Diem thi: 4.5
+Ma sinh vien: PXU06
+Ho ten sinh vien: Nguyen Van D
+Gioi tinh: Nam
+Tuoi: 20
+Diem qua trinh: 8.0
+Diem thi: 9.0
+Ma sinh vien: PXU07
+Ho ten sinh vien: Vo Thi E
+Gioi tinh: Nu
+Tuoi: 18
+Diem qua trinh: 6.5
+Diem thi: 7.5
