@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 public class DoAnJava {
 
     public static void main(String[] args) {
+        SinhVienDao sinhVienDao = new SinhVienDao();
         Scanner sc = new Scanner(System.in);
         SinhVien[] danhSachSinhVien = null;
         int a;
@@ -22,40 +23,64 @@ public class DoAnJava {
         boolean bool = true;
 
         do {
-            menuGiaoVien();
+            menuQLSV();
             int choice = sc.nextInt();
             switch (choice) {
                 case 1: {
-                    danhSachSinhVien = nhapDSSV(sc);
+                    danhSachSinhVien = sinhVienDao.nhapDSSV(sc);
                     break;
                 }
                 case 2: {
-                    xemDSSV(danhSachSinhVien);
+                    if (danhSachSinhVien != null) {
+                        xemDSSV(danhSachSinhVien);
+                    } else {
+                        System.out.println("Danh sach sinh vien trong.");
+                    }
                     break;
                 }
                 case 3: {
-                    danhSachSinhVien = themMotSinhVien(danhSachSinhVien, sc);
-                    xemDSSV(danhSachSinhVien);
+                    if (danhSachSinhVien != null) {
+                        danhSachSinhVien = themMotSinhVien(danhSachSinhVien, sc);
+                        xemDSSV(danhSachSinhVien);
+                    } else {
+                        System.out.println("Danh sach sinh vien trong.");
+                    }
                     break;
                 }
                 case 4: {
-                    a = timKiemSinhVien(danhSachSinhVien, sc);
-                    suaDiemSinhVien(danhSachSinhVien, sc, a);
+                    if (danhSachSinhVien != null) {
+                        a = timKiemSinhVien(danhSachSinhVien, sc);
+                        suaDiemSinhVien(danhSachSinhVien, sc, a);
+                    } else {
+                        System.out.println("Danh sach sinh vien trong.");
+                    }
                     break;
                 }
                 case 5: {
-                    a = timKiemSinhVien(danhSachSinhVien, sc);
-                    danhSachSinhVien = xoaMotSinhVien(danhSachSinhVien, sc, a);
+                    if (danhSachSinhVien != null) {
+                        a = timKiemSinhVien(danhSachSinhVien, sc);
+                        danhSachSinhVien = xoaMotSinhVien(danhSachSinhVien, sc, a);
+                    } else {
+                        System.out.println("Danh sach sinh vien trong.");
+                    }
                     break;
                 }
                 case 6: {
-                    sapXepDSSV(danhSachSinhVien, sc);
-                    xemDSSV(danhSachSinhVien);
+                    if (danhSachSinhVien != null) {
+                        sapXepDSSV(danhSachSinhVien, sc);
+                        xemDSSV(danhSachSinhVien);
+                    } else {
+                        System.out.println("Danh sach sinh vien trong.");
+                    }
                     break;
                 }
                 case 7: {
-                    thongKe = thongKe(danhSachSinhVien, sc);
-                    thongKeDSSV(thongKe, sc);
+                    if (danhSachSinhVien != null) {
+                        thongKe = thongKe(danhSachSinhVien, sc);
+                        thongKeDSSV(thongKe, sc);
+                    } else {
+                        System.out.println("Danh sach sinh vien trong.");
+                    }
                     break;
                 }
                 case 8: {
@@ -84,63 +109,22 @@ public class DoAnJava {
         } while (bool == true);
     }
 
-    public static void menuGiaoVien() {
-        System.out.println("QUAN LI DIEM SINH VIEN");
-        System.out.println("Doi tuong: Giao vien");
-        System.out.println("1. Nhap thong tin sinh vien");
-        System.out.println("2. Xem danh sach sinh vien");
-        System.out.println("3. Them mot sinh vien moi");
-        System.out.println("4. Sua diem mot sinh vien");
-        System.out.println("5. Xoa mot sinh vien");
-        System.out.println("6. Sap xep danh sach sinh vien");
-        System.out.println("7. Thong ke danh sach sinh vien");
-        System.out.println("8. Xuat thong tin ra file");
-        System.out.println("9. Nhap thong tin tu file");
-        System.out.println("0. Thoat chuong trinh");
-        System.out.print("Hay chon chuc nang: ");
-    }
-
-    public static SinhVien[] nhapDSSV(Scanner sc) {
-        System.out.println("Nhap so luong sinh vien: ");
-        int n = sc.nextInt();
-        sc.nextLine();
-        SinhVien[] danhSachSinhVien = new SinhVien[n];
-        for (int i = 0; i < n; i++) {
-            System.out.println("Nhap thong tin cho sinh vien thu " + (i + 1) + ":");
-
-            System.out.print("Ma sinh vien: ");
-            String maSV = sc.nextLine();
-
-            System.out.print("Ho ten: ");
-            String hoTen = sc.nextLine();
-
-            System.out.print("Gioi tinh: ");
-            String gioiTinh = sc.nextLine();
-
-            System.out.print("Tuoi: ");
-            int tuoi = sc.nextInt();
-
-            System.out.print("Diem qua trinh: ");
-            double diemQuaTrinh = sc.nextDouble();
-
-            System.out.print("Diem thi: ");
-            double diemThi = sc.nextDouble();
-
-            if (diemQuaTrinh < 0 || diemThi < 0) {
-                System.out.println("Diem qua trinh va diem thi khong the nho hon 0");
-                System.out.println("Nhap lai diem qua trinh va diem thi");
-                System.out.print("Diem qua trinh: ");
-                diemQuaTrinh = sc.nextDouble();
-
-                System.out.print("Diem thi: ");
-                diemThi = sc.nextDouble();
-            }
-            sc.nextLine();
-
-            danhSachSinhVien[i] = new SinhVien(maSV, hoTen, gioiTinh, tuoi, diemQuaTrinh, diemThi);
-        }
-
-        return danhSachSinhVien;
+    public static void menuQLSV() {
+        System.out.println("+====================================+");
+        System.out.println("|       QUAN LI DIEM SINH VIEN       |");
+        System.out.println("+====================================+");
+        System.out.println("|   1. Nhap thong tin sinh vien      |");
+        System.out.println("|   2. Xem danh sach sinh vien       |");
+        System.out.println("|   3. Them mot sinh vien moi        |");
+        System.out.println("|   4. Sua diem mot sinh vien        |");
+        System.out.println("|   5. Xoa mot sinh vien             |");
+        System.out.println("|   6. Sap xep danh sach sinh vien   |");
+        System.out.println("|   7. Thong ke danh sach sinh vien  |");
+        System.out.println("|   8. Xuat thong tin ra file        |");
+        System.out.println("|   9. Nhap thong tin tu file        |");
+        System.out.println("|   0. Thoat chuong trinh            |");
+        System.out.println("+====================================+");
+        System.out.print("=> Hay chon chuc nang: ");
     }
 
     public static void xemDSSV(SinhVien[] danhSachSinhVien) {
@@ -182,6 +166,7 @@ public class DoAnJava {
     }
 
     public static SinhVien[] themMotSinhVien(SinhVien[] danhSachSinhVien, Scanner sc) {
+        System.out.println("======================================");
         System.out.println("Them mot sinh vien moi");
         sc.nextLine();
 
@@ -205,7 +190,7 @@ public class DoAnJava {
         System.out.print("Diem thi: ");
         double diemThi = sc.nextDouble();
 
-        if (diemQuaTrinh < 0 || diemThi < 0) {
+        while (diemQuaTrinh < 0 || diemThi < 0) {
             System.out.println("Diem qua trinh va diem thi khong the nho hon 0");
             System.out.println("Nhap lai diem qua trinh va diem thi");
             System.out.print("Diem qua trinh: ");
@@ -231,6 +216,7 @@ public class DoAnJava {
     }
 
     public static int timKiemSinhVien(SinhVien[] danhSachSinhVien, Scanner sc) {
+        System.out.println("======================================");
         sc.nextLine();
         System.out.println("Nhap ma sinh vien can tim: ");
         String maSVCanTim = sc.nextLine();
@@ -254,6 +240,7 @@ public class DoAnJava {
     }
 
     public static void suaDiemSinhVien(SinhVien[] danhSachSinhVien, Scanner sc, int a) {
+        System.out.println("======================================");
         System.out.println("Nhap diem qua trinh moi");
         danhSachSinhVien[a].diemQuaTrinh = sc.nextFloat();
         System.out.println("Nhap diem thi moi");
@@ -262,6 +249,7 @@ public class DoAnJava {
     }
 
     public static SinhVien[] xoaMotSinhVien(SinhVien[] danhSachSinhVien, Scanner sc, int a) {
+        System.out.println("======================================");
         SinhVien[] newDanhSachSinhVien = new SinhVien[danhSachSinhVien.length - 1];
         for (int i = a; i < danhSachSinhVien.length - 1; i++) {
             danhSachSinhVien[i] = danhSachSinhVien[i + 1];
@@ -270,10 +258,13 @@ public class DoAnJava {
             newDanhSachSinhVien[i] = danhSachSinhVien[i];
         }
 
+        System.out.println("Da xoa sinh vien thanh cong");
         return newDanhSachSinhVien;
     }
 
     public static void sapXepDSSV(SinhVien[] danhSachSinhVien, Scanner sc) {
+        System.out.println("======================================");
+        System.out.println("Bang diem da duoc sap xep");
         SinhVien temp = null;
 
         for (int i = 0; i < danhSachSinhVien.length - 1; i++) {
@@ -288,6 +279,7 @@ public class DoAnJava {
     }
 
     public static void thongKeDSSV(int[] thongKe, Scanner sc) {
+        System.out.println("======================================");
         System.out.println("Thong ke danh sach sinh vien");
         System.out.println("1. Theo xep loai");
         System.out.println("2. Theo diem trung binh");
@@ -295,6 +287,7 @@ public class DoAnJava {
 
         int choiceTK = sc.nextInt();
         if (choiceTK == 1) {
+            System.out.println("======================================");
             System.out.println("Thong ke DSSV theo xep loai");
             System.out.println("So luong sinh vien Gioi: " + thongKe[0]);
             System.out.println("So luong sinh vien Kha: " + thongKe[1]);
@@ -302,6 +295,7 @@ public class DoAnJava {
             System.out.println("So luong sinh vien Yeu: " + thongKe[3]);
         }
         if (choiceTK == 2) {
+            System.out.println("======================================");
             System.out.println("Thong ke DSSV theo diem trung binh");
             System.out.println("So luong sinh vien DTB >= 8: " + thongKe[0]);
             System.out.println("So luong sinh vien DTB >= 6,5: " + thongKe[1]);
@@ -348,6 +342,7 @@ public class DoAnJava {
 
             }
             writer.close();
+            System.out.println("======================================");
             System.out.println("Xuat thong tin danh sach sinh vien ra file thanh cong.");
         } catch (IOException e) {
             System.out.println("Da xay ra loi khi xuat danh sach sinh vien ra file.");
@@ -387,11 +382,12 @@ public class DoAnJava {
                             break;
                     }
                 } else {
-                    System.out.println("Dòng không đúng định dạng: " + line);
+                    System.out.println("Dong khong dung dinh dang: " + line);
                 }
             }
             scanner.close();
-            System.out.println("Nhập thông tin danh sách sinh viên từ file thành công.");
+            System.out.println("======================================");
+            System.out.println("Nhap thong tin danh sach sinh vien tu file thanh cong.");
         } catch (FileNotFoundException e) {
             System.out.println("Không tìm thấy file: " + tenFile);
             e.printStackTrace();

@@ -33,7 +33,7 @@ public class SinhVien {
             xepLoai = "B - Kha";
         }
         else if (diemTrungBinh >= 5) {
-            xepLoai = "C - Trung Binh";
+            xepLoai = "C - TB";
         }
         else {
             xepLoai = "D - Yeu";
